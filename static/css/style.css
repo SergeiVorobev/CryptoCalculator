@@ -1,0 +1,28 @@
+.parent {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.center {
+    text-align: center;
+}
+
+.opaqueWhite {
+    background-color: rgba(255, 255, 255, 0.3);
+    display: inline-block
+}
+
+h2, p {
+    background-color: rgba(255, 255, 255, 0.3);
+    display: inline-block;
+}
+
+
+
+#bg {
+    background-repeat: no-repeat;
+    background-size: 1800px 900px;
+    background-position: top;
+    background-attachment: fixed;
+}
