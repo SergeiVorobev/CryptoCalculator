@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'bootstrap4',
     'bot.apps.BotConfig',
 ]
 
@@ -53,15 +54,12 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'CryproBot.urls'
 
-
-STATIC_URL = '/static/'
 STATICFILES_DIRS = [STATIC_DIR]
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates']
-        ,
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

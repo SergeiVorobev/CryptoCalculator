@@ -1,8 +1,32 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
+
+from .forms import OrdersDataForm
+from .models import OrdersData
+
 
 # Create your views here.
-def home(request, sn, n, order_q, start_price, first_marg, max_q_price, use_bnb=True):
+def home(request):
+    submitted = False
 
+    if request.method == "POST":
+        form = OrdersDataForm(request.POST)
+        if form.is_valid():
+            instance = form.save(commit=False)
+            instance.user = request.user
+            instance.save()
+            return HttpResponseRedirect('?submitted=True')
+    else:
+        form = OrdersDataForm
+        if 'submitted' in request.GET:
+            submitted = True
+
+    return render(request, 'base.html', {'form': form, 'submitted': submitted, })
+
+
+def calc(request):
+    
+    qs = OrdersData.objects.filter(coin=request.coin)
+    # sn, n, orders_coef, start_price, first_marg, max_q_price, use_bnb=True, is_long=True
     if use_bnb:
         commission = sn * 0.075 / 100 + 0.01  # I am adding 0.01$ just in case
     else:
@@ -13,32 +37,44 @@ def home(request, sn, n, order_q, start_price, first_marg, max_q_price, use_bnb=
     order_amounts = 0
     for i in range(1, n):
         if i == 1:
-            b1 = round(sn * (order_q - 1) / (order_q ** n - 1), 2)
+            b1 = round(sn * (orders_coef/100) / ((1 + orders_coef/100) ** n - 1), 2)
             amounts.append(b1)
             order_amounts += b1
         if i in range(2, n):
-            amount = round(b1 * order_q ** (i - 1), 2)
+            amount = round(b1 * (1 + orders_coef / 100) ** (i - 1), 2)
             amounts.append(amount)
             order_amounts += amount
 
     the_last_order = round(sn - commission - order_amounts, 2)
     amounts.append(the_last_order)
     order_amounts += the_last_order
+    print(order_amounts)
 
     # Calculate order prices
     my_orders = {}
-    o1_temp = start_price * (1 + first_marg / 100)
-    bn = start_price + (start_price * max_q_price / 100)
-    q_price = (bn / o1_temp) ** (1 / n)
-    for i in range(1, n + 1):
-        if i == 1:
-            o1 = round(2 * start_price - o1_temp, 6)
-            my_orders[o1] = amounts[i - 1]
-        if i in range(2, n + 1):
-            o = o1_temp * q_price ** (i - 1)
-            o = round(2 * start_price - o, 6)
-            my_orders[o] = amounts[i - 1]
+    f_order_price_temp = start_price * (1 + first_marg / 100)
+    l_order_price_temp = start_price + (start_price * max_q_price / 100)
+    orders_coef = (l_order_price_temp / f_order_price_temp) ** (1 / n)
+    
+    if is_long:    
+        for i in range(1, n + 1):
+            if i == 1:
+                o1_price = round(2 * start_price - f_order_price_temp, 4) # 2 * 29,000 - 29,750 =  28,250
+                my_orders[o1_price] = amounts[i - 1] # {28,250: 795.05}
+            if i in range(2, n + 1):
+                o = f_order_price_temp * orders_coef ** (i - 1)
+                o = round(2 * start_price - o, 4)
+                my_orders[o] = amounts[i - 1]
+    else:
+        for i in range(1, n + 1):
+            if i == 1:
+                o1_price = round(f_order_price_temp, 4)
+                my_orders[o1_price] = amounts[i - 1] # {28,250: 795.05}
+            if i in range(2, n + 1):
+                o = round(f_order_price_temp * orders_coef ** (i - 1), 4)
+                my_orders[o] = amounts[i - 1]
+        
     return render(request, 'calculator.html', {
-                      # "name": name,
-                      "my_orders": my_orders,
-                     })
+                    "data": qs,
+                    "orders": my_orders,
+                    })

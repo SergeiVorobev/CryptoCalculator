@@ -11,9 +11,27 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <title>Calculate orders</title>
   </head>
-  <body id="bg" style="background-image: url('{% static "images/bg22.jpg"%}');">
-    {% include 'events/navbar.html' %}
+  <body id="bg" style="background-image: url('{% static "images/bg.jpg"%}');">
+    <h1>
+      Create orders
+    </h1>
     <br/>
+      {% if submitted %}
+      <br>
+      <p>Your data is successfully added!</p>
+      <div>
+          <a href="{%  url 'calc' %}" class="btn btn-primary"> SEE Orders</a>
+      </div>
+    {% else %}
+      <form action="" method=POST>
+          {% csrf_token %}
+          {{ form.as_p }}
+          <br><br>
+          <a href="{%  url 'user:users-home' %}" class="btn btn-secondary">COME BACK</a>
+          <input type="submit" value="SUBMIT" class="btn btn-primary">
+
+      </form>
+    {% endif %}
     <div class="container" style="align-content: center">
         {% block content %}
         {% endblock %}

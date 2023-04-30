@@ -1,5 +1,38 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <br/><br/>
+    <br/>
+    <div class="card">
+        <h5 class="card-header"> <strong>{{data}}</strong></h5>
+        <div class="card-body">
+          <h5 class="card-title">Your orders:</h5>
+          <div>
+              <ul>
+                  <li>Amount to buy/sell: {{ data.amount}}</li>
+                  <li>Number of orders: {{ data.n_orders}}</li>
+                  <li>Init price: {{ data.init_price}}</li>
+                  <li>Rate changes, %: {{ data.rate_changes}}</li>
+                  <li>Martingale, %: {{ data.martingale}}</li>
+                  <li>First order indent, %: {{ data.f_order_indent}}</li>
+                  <li>Algorithm is long, if no - short: {{ data.alg_long}}</li>
+
+                  <li><p>Orders:</p>
+                      <p>{{orders}}</p>
+                  </li>
+               </ul>
+          </div>
+          <br/><br/>
+
+          {% comment %} <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+              <div class="btn-group mr-2" role="group" aria-label="First group">
+                  <a href="{%  url 'user:users-home' %}" class="btn btn-secondary" >BACK</a>
+              </div>
+              <div class="btn-group mr-2" role="group" aria-label="Second group">
+                  <a href="{%  url 'dashboard:edit-health-data' data.id %}" class="btn btn-primary">EDIT DATA</a>
+              </div>
+              <div class="btn-group mr-2" role="group" aria-label="Third group">
+                  <a href="{%  url 'dashboard:del-health-data' data.id %}" class="btn btn-danger">DELETE DATA</a>
+              </div>
+          </div> {% endcomment %}
+  </div>
 {% endblock %}
