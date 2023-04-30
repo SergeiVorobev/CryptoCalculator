@@ -4,8 +4,10 @@ from django.utils.timezone import now
 from django.core.exceptions import ValidationError
 import datetime
 
-# Create your models here.
+from .algo_choices import ALGORITHM_CHOICES
+
 class OrdersData(models.Model):
+    
     coin = models.TextField()
     amount = models.FloatField(null=False)
     n_orders = models.IntegerField(null=False)
@@ -13,8 +15,12 @@ class OrdersData(models.Model):
     rate_changes = models.IntegerField(null=False)
     martingale = models.IntegerField(null=False)
     f_order_indent = models.FloatField(null=False)
-    alg_long = models.BooleanField(null=False)
-
+    commission = models.FloatField(null=False)
+    algorithm = models.CharField(
+        max_length=5,
+        choices=ALGORITHM_CHOICES,
+        default='short',
+    )
 
     def __str__(self):
         return str(self.coin)

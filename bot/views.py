@@ -25,12 +25,18 @@ def home(request):
 
 def calc(request):
     
-    qs = OrdersData.objects.filter(coin=request.coin)
+    qs = OrdersData.objects.latest()
+    alg = qs.algorithm
+    sn = qs.amount
+    n = qs.n_orders
+    orders_coef = qs.martingale
+    start_price = qs.init_price
+    first_marg = qs.f_order_indent
+    max_q_price = qs.rate_changes
+    comm = qs.commission
     # sn, n, orders_coef, start_price, first_marg, max_q_price, use_bnb=True, is_long=True
-    if use_bnb:
-        commission = sn * 0.075 / 100 + 0.01  # I am adding 0.01$ just in case
-    else:
-        commission = sn * 0.1 / 100 + 0.01  # I am adding 0.01$ just in case
+
+    commission = sn * comm / 100 + 0.01  # I am adding 0.01$ just in case
 
     # Calculate order amounts
     amounts = []
