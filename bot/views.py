@@ -1,4 +1,5 @@
 from django.shortcuts import render,redirect
+from django.http import HttpResponseRedirect
 
 from .forms import OrdersDataForm
 from .models import OrdersData
@@ -25,7 +26,7 @@ def home(request):
 
 def calc(request):
     
-    qs = OrdersData.objects.latest()
+    qs = OrdersData.objects.order_by('-id').first()
     alg = qs.algorithm
     sn = qs.amount
     n = qs.n_orders
@@ -62,7 +63,7 @@ def calc(request):
     l_order_price_temp = start_price + (start_price * max_q_price / 100)
     orders_coef = (l_order_price_temp / f_order_price_temp) ** (1 / n)
     
-    if is_long:    
+    if alg == "long":    
         for i in range(1, n + 1):
             if i == 1:
                 o1_price = round(2 * start_price - f_order_price_temp, 4) # 2 * 29,000 - 29,750 =  28,250
