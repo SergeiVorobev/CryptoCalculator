@@ -1,4 +1,4 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect, get_object_or_404
 from django.http import HttpResponseRedirect
 
 from .forms import OrdersDataForm
@@ -85,3 +85,30 @@ def calc(request):
                     "data": qs,
                     "orders": my_orders,
                     })
+
+
+from django.shortcuts import get_object_or_404
+
+def edit_data(request, id):
+    # Get the specific data by ID or show 404 if not found
+    instance = get_object_or_404(OrdersData, id=id)
+
+    if request.method == "POST":
+        form = OrdersDataForm(request.POST, instance=instance)
+        if form.is_valid():
+            form.save()
+            return redirect('calc')  # Redirect to the calculation results
+    else:
+        # Pre-fill the form with existing data
+        form = OrdersDataForm(instance=instance)
+
+    return render(request, 'base.html', {'form': form, 'data': instance})
+
+
+def delete_data(request, id):
+    instance = get_object_or_404(OrdersData, id=id)
+    if request.method == "POST":
+        instance.delete()
+        return redirect('home')  # Redirect to the home page after deletion
+
+    return render(request, 'delete_confirm.html', {'data': instance})
