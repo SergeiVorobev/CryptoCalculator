@@ -19,5 +19,6 @@ from . import views
 urlpatterns = [
     path('', views.home, name='home'),
     path('results/', views.calc, name='calc'),
-
+    path('edit/<int:id>/', views.edit_data, name='edit_data'),  # New URL for editing data
+    path('delete/<int:id>/', views.delete_data, name='delete_data'),
 ]

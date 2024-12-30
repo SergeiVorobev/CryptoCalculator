@@ -23,16 +23,17 @@
           </div>
           <br/><br/>
 
-          {% comment %} <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
-              <div class="btn-group mr-2" role="group" aria-label="First group">
-                  <a href="{%  url 'user:users-home' %}" class="btn btn-secondary" >BACK</a>
-              </div>
-              <div class="btn-group mr-2" role="group" aria-label="Second group">
-                  <a href="{%  url 'dashboard:edit-health-data' data.id %}" class="btn btn-primary">EDIT DATA</a>
-              </div>
-              <div class="btn-group mr-2" role="group" aria-label="Third group">
-                  <a href="{%  url 'dashboard:del-health-data' data.id %}" class="btn btn-danger">DELETE DATA</a>
-              </div>
-          </div> {% endcomment %}
+          <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+            <div class="btn-group mr-2" role="group" aria-label="First group">
+                <a href="{% url 'home' %}" class="btn btn-secondary">BACK</a>
+            </div>
+            <div class="btn-group mr-2" role="group" aria-label="Second group">
+                <a href="{% url 'edit_data' data.id %}" class="btn btn-primary">EDIT DATA</a>
+            </div>
+            <div class="btn-group mr-2" role="group" aria-label="Third group">
+                <a href="{% url 'delete_data' data.id %}" class="btn btn-danger">DELETE DATA</a>
+            </div>
+        </div>
+        
   </div>
 {% endblock %}
